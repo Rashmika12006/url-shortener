@@ -1,0 +1,6 @@
+{
+  "name": "LinkSnap",
+  "description": "A premium, SaaS-style URL shortener with analytics and QR code generation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}

@@ -1,0 +1,32 @@
+{
+  "urls": [
+    {
+      "id": "MzNKU2",
+      "originalUrl": "file:///C:/Users/Rashmika%20Sharma/Downloads/ML%20UNIT3.pdf",
+      "shortCode": "MzNKU2",
+      "clickCount": 5,
+      "createdAt": "2026-04-20T15:25:09.445Z"
+    },
+    {
+      "id": "MElyLY",
+      "originalUrl": "https://example.com",
+      "shortCode": "MElyLY",
+      "clickCount": 0,
+      "createdAt": "2026-04-20T15:33:06.934Z"
+    },
+    {
+      "id": "1CUiCB",
+      "originalUrl": "https://example.com",
+      "shortCode": "1CUiCB",
+      "clickCount": 1,
+      "createdAt": "2026-04-20T15:59:21.972Z"
+    },
+    {
+      "id": "_SUYP5",
+      "originalUrl": "https://google.com",
+      "shortCode": "_SUYP5",
+      "clickCount": 1,
+      "createdAt": "2026-04-21T04:48:10.056Z"
+    }
+  ]
+}
