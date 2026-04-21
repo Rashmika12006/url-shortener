@@ -3,15 +3,8 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { nanoid } from "nanoid";
-import path from "path";
-import { fileURLToPath } from "url";
-import { createServer as createViteServer } from "vite";
 
 dotenv.config();
-
-// Fix __dirname for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // -------------------- SCHEMA --------------------
 const urlSchema = new mongoose.Schema(
@@ -33,7 +26,7 @@ async function startServer() {
   app.use(cors());
   app.use(express.json());
 
-  // ✅ CONNECT MONGO INSIDE SERVER
+  // ✅ CONNECT MONGO
   try {
     if (!process.env.MONGO_URI) {
       throw new Error("MONGO_URI is missing");
@@ -80,7 +73,6 @@ async function startServer() {
       const urls = await Url.find().sort({ createdAt: -1 });
       res.json(urls);
     } catch (error) {
-      console.error(error);
       res.status(500).json({ error: "Failed to fetch URLs" });
     }
   });
@@ -111,27 +103,12 @@ async function startServer() {
     }
   });
 
-  // -------------------- VITE (IMPORTANT FIX) --------------------
-
-  if (process.env.NODE_ENV !== "production") {
-    const vite = await createViteServer({
-      server: { middlewareMode: true },
-      appType: "spa",
-    });
-
-    app.use(vite.middlewares);
-  } else {
-    const distPath = path.join(__dirname, "dist");
-
-    app.use(express.static(distPath));
-
-    app.get("*", (_, res) => {
-      res.sendFile(path.join(distPath, "index.html"));
-    });
-  }
+  // ✅ ROOT ROUTE (IMPORTANT FIX)
+  app.get("/", (req, res) => {
+    res.send("🚀 URL Shortener API is running");
+  });
 
   // -------------------- START SERVER --------------------
-
   app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
   });
