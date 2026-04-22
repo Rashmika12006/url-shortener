@@ -7,7 +7,7 @@ import URLForm from "./components/URLForm";
 import URLTable from "./components/URLTable";
 import { URLData } from "./types";
 import axios from "axios";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function App() {
