@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState } from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Copy, Trash2, QrCode } from "lucide-react";
 import { toast } from "sonner";
 import { QRCodeCanvas } from "qrcode.react"; // ✅ FIXED IMPORT
