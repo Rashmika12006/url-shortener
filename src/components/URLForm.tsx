@@ -1,8 +1,7 @@
-import * as React from "react"
+import * as React from "react";
 import { useState } from "react";
 import { motion } from "motion/react";
-import { Link2, ArrowRight, Loader2 } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import axios from "axios";
@@ -15,13 +14,16 @@ export default function URLForm({ onSuccess }: URLFormProps) {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ✅ API BASE URL
+  const API = import.meta.env.VITE_API_URL;
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!url) return;
 
     setLoading(true);
     try {
-      await axios.post("/api/shorten", { url });
+      await axios.post(`${API}/api/shorten`, { url }); // ✅ FIXED
       toast.success("URL shortened successfully!");
       setUrl("");
       onSuccess();
@@ -39,7 +41,7 @@ export default function URLForm({ onSuccess }: URLFormProps) {
       transition={{ delay: 0.2 }}
       className="max-w-[720px] mx-auto px-4"
     >
-      <form 
+      <form
         onSubmit={handleSubmit}
         className="input-group-container flex items-center p-2 gap-2 backdrop-blur-xl"
       >
@@ -51,19 +53,19 @@ export default function URLForm({ onSuccess }: URLFormProps) {
           onChange={(e) => setUrl(e.target.value)}
           required
         />
-        <Button 
-  type="submit" 
-  disabled={loading}
-  className="h-12 px-7 rounded-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-semibold shadow-lg transition duration-200"
->
-  {loading ? (
-    <Loader2 className="w-5 h-5 animate-spin" />
-  ) : (
-    "Shorten Now"
-  )}
-</Button>
+
+        <Button
+          type="submit"
+          disabled={loading}
+          className="h-12 px-7 rounded-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-semibold shadow-lg transition duration-200"
+        >
+          {loading ? (
+            <Loader2 className="w-5 h-5 animate-spin" />
+          ) : (
+            "Shorten Now"
+          )}
+        </Button>
       </form>
     </motion.div>
   );
 }
-
