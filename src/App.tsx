@@ -1,8 +1,3 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
-
 import { useState, useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import Navbar from "./components/Navbar";
@@ -13,16 +8,18 @@ import URLTable from "./components/URLTable";
 import { URLData } from "./types";
 import axios from "axios";
 import { motion } from "motion/react";
-
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function App() {
   const [urls, setUrls] = useState<URLData[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // ✅ API BASE URL
+  const API = import.meta.env.VITE_API_URL;
+
   const fetchUrls = async () => {
     try {
-      const response = await axios.get("/api/urls");
+      const response = await axios.get(`${API}/api/urls`); // ✅ FIXED
       setUrls(response.data);
     } catch (error) {
       console.error("Failed to fetch URLs", error);
@@ -33,7 +30,7 @@ export default function App() {
 
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`/api/urls/${id}`);
+      await axios.delete(`${API}/api/urls/${id}`); // ✅ FIXED
       fetchUrls();
     } catch (error) {
       console.error("Failed to delete URL", error);
@@ -48,10 +45,10 @@ export default function App() {
     <div className="min-h-screen bg-bg text-text-main selection:bg-accent/30">
       <div className="atmosphere" />
       <Navbar />
-      
+
       <main>
         <Hero />
-        
+
         <div className="relative -mt-10 mb-20">
           <URLForm onSuccess={fetchUrls} />
         </div>
@@ -65,26 +62,34 @@ export default function App() {
           >
             <div>
               <h2 className="text-2xl font-bold">Dashboard</h2>
-              <p className="text-text-muted mt-1">Manage and track your shortened URLs</p>
+              <p className="text-text-muted mt-1">
+                Manage and track your shortened URLs
+              </p>
             </div>
-            
+
             <div className="flex items-center gap-4">
               <div className="px-4 py-2 bg-glass border border-border-subtle rounded-xl text-sm">
-                Total Links: <span className="text-text-main font-bold">{urls.length}</span>
+                Total Links:{" "}
+                <span className="text-text-main font-bold">
+                  {urls.length}
+                </span>
               </div>
               <div className="px-4 py-2 bg-glass border border-border-subtle rounded-xl text-sm">
-                Total Clicks: <span className="text-text-main font-bold">
+                Total Clicks:{" "}
+                <span className="text-text-main font-bold">
                   {urls.reduce((acc, curr) => acc + curr.clickCount, 0)}
                 </span>
               </div>
             </div>
           </motion.div>
 
-
           {loading ? (
             <div className="space-y-4">
               {[...Array(3)].map((_, i) => (
-                <Skeleton key={i} className="h-20 w-full bg-white/5 rounded-2xl" />
+                <Skeleton
+                  key={i}
+                  className="h-20 w-full bg-white/5 rounded-2xl"
+                />
               ))}
             </div>
           ) : (
@@ -98,5 +103,3 @@ export default function App() {
     </div>
   );
 }
-
-
