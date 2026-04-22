@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@vitejs/plugin-react": "^4.7.0",
     "axios": "^1.15.1",
     "cors": "^2.8.6",
