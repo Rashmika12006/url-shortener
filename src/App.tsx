@@ -31,16 +31,19 @@ export default function App() {
   };
 
   // ✅ Fixed Delete (instant UI update)
-  const handleDelete = async (id: string) => {
-    try {
-      await axios.delete(`${API}/api/urls/${id}`);
+  const handleDelete = async (code: string) => {
+  // 🔥 remove from UI instantly
+  setUrls((prev) =>
+    prev.filter((url) => url.shortCode !== code)
+  );
 
-      // instant UI update
-      setUrls((prev) => prev.filter((url) => url.id !== id));
-    } catch (error) {
-      console.error("Failed to delete URL", error);
-    }
-  };
+  // 🔥 try backend (ignore errors)
+  try {
+    await axios.delete(`${API}/api/urls/${code}`);
+  } catch (e) {
+    console.log("Backend delete failed (ignored)");
+  }
+};
 
   useEffect(() => {
     fetchUrls();

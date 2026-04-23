@@ -78,26 +78,43 @@ async function startServer() {
 
   // 🔹 Get all URLs
   app.get("/api/urls", async (req, res) => {
-    try {
-      const urls = await Url.find().sort({ createdAt: -1 });
+  try {
+    const urls = await Url.find().sort({ createdAt: -1 });
 
-      // ✅ ensure frontend always gets array
-      res.json(urls);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch URLs" });
-    }
-  });
+    // ✅ ensure id exists for frontend
+    const formatted = urls.map((url) => ({
+      ...url.toObject(),
+      id: url._id.toString(), // ✅ THIS FIX
+    }));
+
+    res.json(formatted);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch URLs" });
+  }
+});
 
   // 🔹 Delete URL
-  app.delete("/api/urls/:id", async (req, res) => {
-    try {
-      await Url.findByIdAndDelete(req.params.id);
-      res.json({ success: true });
-    } catch {
-      res.status(500).json({ error: "Failed to delete URL" });
-    }
-  });
+  // 🔹 Delete URL (FIXED)
+app.delete("/api/urls/:code", async (req, res) => {
+  try {
+    const code = req.params.code;
 
+    console.log("Deleting:", code);
+
+    const deleted = await Url.findOneAndDelete({
+      shortCode: code.trim(),
+    });
+
+    if (!deleted) {
+      return res.status(404).json({ error: "URL not found" });
+    }
+
+    res.json({ message: "Deleted successfully" });
+  } catch (err) {
+    console.error("DELETE ERROR:", err);
+    res.status(500).json({ error: "Delete failed" });
+  }
+});
   // 🔹 Redirect (THIS IS KEY FEATURE)
   app.get("/r/:code", async (req, res) => {
     try {

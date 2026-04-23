@@ -6,9 +6,8 @@ import { toast } from "sonner";
 import { QRCodeCanvas } from "qrcode.react";
 
 interface URLData {
-  id: string;
-  originalUrl: string;
   shortCode: string;
+  originalUrl: string;
   clickCount: number;
   createdAt: string;
 }
@@ -92,7 +91,7 @@ export default function URLTable({ urls, onDelete }: Props) {
 
               {/* DELETE */}
               <button
-                onClick={() => onDelete(url.id)}
+              onClick={() => onDelete(url.shortCode)}
                 className="p-2 bg-red-500/20 rounded-lg hover:bg-red-500/40"
               >
                 <Trash2 size={16} />
