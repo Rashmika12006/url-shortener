@@ -17,8 +17,7 @@ export default function Navbar() {
       <div className="flex items-center gap-8">
         <a href="#" className="text-sm font-medium text-text-main">Home</a>
         <a href="#dashboard" className="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Dashboard</a>
-        <a href="#" className="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Analytics</a>
-        <a href="#" className="text-sm font-medium text-text-muted hover:text-text-main transition-colors">Settings</a>
+        
       </div>
 
       <div>

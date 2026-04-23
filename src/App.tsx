@@ -10,32 +10,33 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 
-
 export default function App() {
   const [urls, setUrls] = useState<URLData[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ API BASE URL
-  const API = import.meta.env.VITE_API_URL;
+  // ✅ Safe API base URL
+  const API =
+    import.meta.env.VITE_API_URL || window.location.origin;
 
+  // ✅ Fetch URLs
   const fetchUrls = async () => {
-  try {
-    const response = await axios.get(`${API}/api/urls`);
+    try {
+      const response = await axios.get(`${API}/api/urls`);
+      setUrls(response.data.urls || response.data);
+    } catch (error) {
+      console.error("Failed to fetch URLs", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    console.log("API RESPONSE:", response.data); // 👈 ADD THIS LINE
-
-   setUrls(response.data.urls || response.data);
-  } catch (error) {
-    console.error("Failed to fetch URLs", error);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  // ✅ Fixed Delete (instant UI update)
   const handleDelete = async (id: string) => {
     try {
-      await axios.delete(`${API}/api/urls/${id}`); // ✅ FIXED
-      fetchUrls();
+      await axios.delete(`${API}/api/urls/${id}`);
+
+      // instant UI update
+      setUrls((prev) => prev.filter((url) => url.id !== id));
     } catch (error) {
       console.error("Failed to delete URL", error);
     }
@@ -53,11 +54,14 @@ export default function App() {
       <main>
         <Hero />
 
-       <div className="min-h-screen bg-bg text-text-main selection:bg-accent/30 relative overflow-hidden">
+        <div className="min-h-screen bg-bg text-text-main selection:bg-accent/30 relative overflow-hidden">
           <URLForm onSuccess={fetchUrls} />
         </div>
 
-        <section id="dashboard" className="max-w-[1024px] mx-auto px-10 pb-24">
+        <section
+          id="dashboard"
+          className="max-w-[1024px] mx-auto px-10 pb-24"
+        >
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -70,23 +74,27 @@ export default function App() {
                 Manage and track your shortened URLs
               </p>
             </div>
-<div className="flex items-center gap-4">
-  <div className="px-4 py-2 bg-glass border border-border-subtle backdrop-blur-xl rounded-xl text-sm">
-    Total Links:
-    <span className="text-text-main font-bold">
-      {Array.isArray(urls) ? urls.length : 0}
-    </span>
-  </div>
 
-  <div className="px-4 py-2 bg-glass border border-border-subtle backdrop-blur-xl rounded-xl text-sm">
-    Total Clicks:
-   <span className="text-text-main font-bold">
-  {Array.isArray(urls)
-    ? urls.reduce((acc, curr) => acc + (curr.clickCount || 0), 0)
-    : 0}
-</span>
-  </div>
-</div>
+            <div className="flex items-center gap-4">
+              <div className="px-4 py-2 bg-glass border border-border-subtle backdrop-blur-xl rounded-xl text-sm">
+                Total Links:
+                <span className="text-text-main font-bold">
+                  {Array.isArray(urls) ? urls.length : 0}
+                </span>
+              </div>
+
+              <div className="px-4 py-2 bg-glass border border-border-subtle backdrop-blur-xl rounded-xl text-sm">
+                Total Clicks:
+                <span className="text-text-main font-bold">
+                  {Array.isArray(urls)
+                    ? urls.reduce(
+                        (acc, curr) => acc + (curr.clickCount || 0),
+                        0
+                      )
+                    : 0}
+                </span>
+              </div>
+            </div>
           </motion.div>
 
           {loading ? (
