@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/src/components/ui/button";
 import { toast } from "sonner";
 import axios from "axios";
 
@@ -14,25 +14,32 @@ export default function URLForm({ onSuccess }: URLFormProps) {
   const [loading, setLoading] = useState(false);
 
   // ✅ API BASE URL
-  const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!url) return;
+const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (!url) return;
 
-    setLoading(true);
-    try {
-      console.log("API:", API);
-      await axios.post(`${API}/api/shorten`, { url }); // ✅ FIXED
-      toast.success("URL shortened successfully!");
-      setUrl("");
-      onSuccess();
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || "Failed to shorten URL");
-    } finally {
-      setLoading(false);
+  setLoading(true);
+  try {
+    console.log("API:", API);
+
+    if (!API) {
+      toast.error("API URL not configured");
+      return;
     }
-  };
+
+    await axios.post(`${API}/api/shorten`, { url });
+
+    toast.success("URL shortened successfully!");
+    setUrl("");
+    onSuccess();
+  } catch (error: any) {
+    toast.error(error.response?.data?.error || "Failed to shorten URL");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <motion.div

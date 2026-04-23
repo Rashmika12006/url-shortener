@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/src/components/ui/sonner";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
@@ -8,7 +8,7 @@ import URLTable from "./components/URLTable";
 import { URLData } from "./types";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/src/components/ui/skeleton";
 
 export default function App() {
   const [urls, setUrls] = useState<URLData[]>([]);
