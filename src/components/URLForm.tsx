@@ -22,6 +22,7 @@ export default function URLForm({ onSuccess }: URLFormProps) {
 
     setLoading(true);
     try {
+      console.log("API:", API);
       await axios.post(`${API}/api/shorten`, { url }); // ✅ FIXED
       toast.success("URL shortened successfully!");
       setUrl("");
