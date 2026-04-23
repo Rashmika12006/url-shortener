@@ -3,7 +3,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Copy, Trash2, QrCode } from "lucide-react";
 import { toast } from "sonner";
-import { QRCodeCanvas } from "qrcode.react"; // ✅ FIXED IMPORT
+import { QRCodeCanvas } from "qrcode.react";
 
 interface URLData {
   id: string;
@@ -21,10 +21,13 @@ interface Props {
 export default function URLTable({ urls, onDelete }: Props) {
   const [selectedUrl, setSelectedUrl] = useState<string | null>(null);
 
+  // ✅ SINGLE SOURCE OF TRUTH (IMPORTANT)
+  const API =
+    import.meta.env.VITE_API_URL || window.location.origin;
+
   // ✅ COPY FIXED
   const copyToClipboard = (code: string) => {
-    const fullUrl = `${window.location.origin}/r/${code}`;
-    navigator.clipboard.writeText(fullUrl);
+    navigator.clipboard.writeText(`${API}/r/${code}`);
     toast.success("Link copied!");
   };
 
@@ -35,6 +38,7 @@ export default function URLTable({ urls, onDelete }: Props) {
           No links yet
         </div>
       ) : (
+        Array.isArray(urls) &&
         urls.map((url) => (
           <motion.div
             key={url.id}
@@ -44,10 +48,9 @@ export default function URLTable({ urls, onDelete }: Props) {
           >
             {/* LEFT */}
             <div className="flex flex-col gap-1">
-              
-              {/* ✅ CLICKABLE SHORT LINK */}
+              {/* ✅ FIXED SHORT LINK */}
               <a
-                href={`/r/${url.shortCode}`}
+                href={`${API}/r/${url.shortCode}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-purple-400 font-semibold hover:underline"
@@ -63,7 +66,6 @@ export default function URLTable({ urls, onDelete }: Props) {
 
             {/* RIGHT */}
             <div className="flex items-center gap-3">
-
               {/* CLICKS */}
               <span className="text-sm text-gray-300">
                 {url.clickCount} clicks
@@ -80,9 +82,7 @@ export default function URLTable({ urls, onDelete }: Props) {
               {/* QR CODE */}
               <button
                 onClick={() =>
-                  setSelectedUrl(
-                    `${window.location.origin}/r/${url.shortCode}`
-                  )
+                  setSelectedUrl(`${API}/r/${url.shortCode}`)
                 }
                 className="p-2 bg-white/10 rounded-lg hover:bg-white/20"
               >
@@ -105,8 +105,6 @@ export default function URLTable({ urls, onDelete }: Props) {
       {selectedUrl && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/60">
           <div className="bg-black p-6 rounded-xl text-center">
-            
-            {/* ✅ FIXED QR COMPONENT */}
             <QRCodeCanvas value={selectedUrl} size={200} />
 
             <p className="mt-3 text-sm text-gray-400 break-all">

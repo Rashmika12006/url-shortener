@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/src/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import axios from "axios";
 
@@ -50,12 +50,12 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     >
       <form
         onSubmit={handleSubmit}
-        className="input-group-container flex items-center p-2 gap-2 backdrop-blur-xl"
+        className="flex items-center p-2 gap-2 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl"
       >
         <input
           type="url"
           placeholder="Paste your long URL here..."
-          className="flex-1 bg-transparent border-none px-6 py-3 text-white text-base outline-none placeholder:text-text-muted"
+         className="flex-1 bg-transparent border-none px-6 py-3 text-white outline-none placeholder:text-gray-400"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           required
@@ -64,7 +64,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         <Button
           type="submit"
           disabled={loading}
-          className="h-12 px-7 rounded-[10px] bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-semibold shadow-lg transition duration-200"
+         className="h-12 px-7 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-semibold shadow-lg"
         >
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin" />

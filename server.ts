@@ -57,10 +57,19 @@ async function startServer() {
         shortCode,
       });
 
-      const base = process.env.BASE_URL || `http://localhost:${PORT}`;
+      // ✅ FIXED BASE URL (IMPORTANT)
+      const base =
+        process.env.BASE_URL || `http://localhost:${PORT}`;
+
       const shortUrl = `${base}/r/${shortCode}`;
 
-      res.json({ shortCode, shortUrl });
+      res.json({
+        id: newUrl._id,
+        originalUrl: newUrl.originalUrl,
+        shortCode,
+        shortUrl,
+        clickCount: newUrl.clickCount,
+      });
     } catch (error) {
       console.error("Error shortening URL:", error);
       res.status(500).json({ error: "Failed to shorten URL" });
@@ -71,6 +80,8 @@ async function startServer() {
   app.get("/api/urls", async (req, res) => {
     try {
       const urls = await Url.find().sort({ createdAt: -1 });
+
+      // ✅ ensure frontend always gets array
       res.json(urls);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch URLs" });
@@ -87,23 +98,25 @@ async function startServer() {
     }
   });
 
-  // 🔹 Redirect
+  // 🔹 Redirect (THIS IS KEY FEATURE)
   app.get("/r/:code", async (req, res) => {
     try {
-      const url = await Url.findOne({ shortCode: req.params.code });
+      const url = await Url.findOne({
+        shortCode: req.params.code,
+      });
 
       if (!url) return res.status(404).send("Not found");
 
       url.clickCount++;
       await url.save();
 
-      res.redirect(url.originalUrl);
+      return res.redirect(url.originalUrl);
     } catch {
       res.status(500).send("Error");
     }
   });
 
-  // ✅ ROOT ROUTE (IMPORTANT FIX)
+  // ✅ ROOT ROUTE
   app.get("/", (req, res) => {
     res.send("🚀 URL Shortener API is running");
   });

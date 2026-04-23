@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
-import { Toaster } from "@/src/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import URLForm from "./components/URLForm";
 import URLTable from "./components/URLTable";
-import { URLData } from "./types";
+import { URLData } from "@/types";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Skeleton } from "@/src/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
+
 
 export default function App() {
   const [urls, setUrls] = useState<URLData[]>([]);
@@ -18,15 +19,18 @@ export default function App() {
   const API = import.meta.env.VITE_API_URL;
 
   const fetchUrls = async () => {
-    try {
-      const response = await axios.get(`${API}/api/urls`); // ✅ FIXED
-      setUrls(response.data);
-    } catch (error) {
-      console.error("Failed to fetch URLs", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const response = await axios.get(`${API}/api/urls`);
+
+    console.log("API RESPONSE:", response.data); // 👈 ADD THIS LINE
+
+   setUrls(response.data.urls || response.data);
+  } catch (error) {
+    console.error("Failed to fetch URLs", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleDelete = async (id: string) => {
     try {
@@ -49,7 +53,7 @@ export default function App() {
       <main>
         <Hero />
 
-        <div className="relative -mt-10 mb-20">
+       <div className="min-h-screen bg-bg text-text-main selection:bg-accent/30 relative overflow-hidden">
           <URLForm onSuccess={fetchUrls} />
         </div>
 
@@ -66,21 +70,23 @@ export default function App() {
                 Manage and track your shortened URLs
               </p>
             </div>
+<div className="flex items-center gap-4">
+  <div className="px-4 py-2 bg-glass border border-border-subtle backdrop-blur-xl rounded-xl text-sm">
+    Total Links:
+    <span className="text-text-main font-bold">
+      {Array.isArray(urls) ? urls.length : 0}
+    </span>
+  </div>
 
-            <div className="flex items-center gap-4">
-              <div className="px-4 py-2 bg-glass border border-border-subtle rounded-xl text-sm">
-                Total Links:{" "}
-                <span className="text-text-main font-bold">
-                  {urls.length}
-                </span>
-              </div>
-              <div className="px-4 py-2 bg-glass border border-border-subtle rounded-xl text-sm">
-                Total Clicks:{" "}
-                <span className="text-text-main font-bold">
-                  {urls.reduce((acc, curr) => acc + curr.clickCount, 0)}
-                </span>
-              </div>
-            </div>
+  <div className="px-4 py-2 bg-glass border border-border-subtle backdrop-blur-xl rounded-xl text-sm">
+    Total Clicks:
+   <span className="text-text-main font-bold">
+  {Array.isArray(urls)
+    ? urls.reduce((acc, curr) => acc + (curr.clickCount || 0), 0)
+    : 0}
+</span>
+  </div>
+</div>
           </motion.div>
 
           {loading ? (

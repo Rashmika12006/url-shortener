@@ -1,9 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
 
 :root {
   --color-bg: #030712;
@@ -11,25 +11,34 @@
   --color-accent: #6366f1;
   --color-text-main: #f9fafb;
   --color-text-muted: #9ca3af;
-  --color-border-subtle: rgba(255,255,255,0.08);
-  --color-glass: rgba(255,255,255,0.03);
+  --color-border-subtle: rgba(255,255,255,0.1);
+  --color-glass: rgba(255,255,255,0.05);
 }
 
 /* Base */
 body {
-  font-family: "Inter", sans-serif;
-  background-color: var(--color-bg);
-  color: var(--color-text-main);
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(99, 102, 241, 0.15),
+      transparent 40%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(168, 85, 247, 0.12),
+      transparent 40%
+    ),
+    #030712;
+  color: #f9fafb;
 }
 
 /* Atmosphere background */
 .atmosphere {
   position: fixed;
   inset: 0;
-  z-index: -10;
+  z-index: -1;
   background:
-    radial-gradient(circle at 80% 20%, #1e1b4b 0%, transparent 40%),
-    radial-gradient(circle at 10% 90%, #0f172a 0%, transparent 40%);
+    radial-gradient(circle at 20% 20%, rgba(99,102,241,0.15), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(168,85,247,0.12), transparent 40%);
 }
 
 /* Glass card */
