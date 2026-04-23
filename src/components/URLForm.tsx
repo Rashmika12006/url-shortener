@@ -13,33 +13,38 @@ export default function URLForm({ onSuccess }: URLFormProps) {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // ✅ API BASE URL
-const API = import.meta.env.VITE_API_URL;
+  const API = import.meta.env.VITE_API_URL;
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  if (!url) return;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  setLoading(true);
-  try {
-    console.log("API:", API);
+    if (!url.trim()) return;
 
     if (!API) {
       toast.error("API URL not configured");
       return;
     }
 
-    await axios.post(`${API}/api/shorten`, { url });
+    setLoading(true);
 
-    toast.success("URL shortened successfully!");
-    setUrl("");
-    onSuccess();
-  } catch (error: any) {
-    toast.error(error.response?.data?.error || "Failed to shorten URL");
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      console.log("API:", API);
+
+      const res = await axios.post(`${API}/api/shorten`, { url });
+
+      console.log("Response:", res.data); // 👈 debug (important)
+
+      toast.success("URL shortened successfully!");
+
+      setUrl("");
+      onSuccess(); // refresh list
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.response?.data?.error || "Failed to shorten URL");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <motion.div
@@ -55,7 +60,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         <input
           type="url"
           placeholder="Paste your long URL here..."
-         className="flex-1 bg-transparent border-none px-6 py-3 text-white outline-none placeholder:text-gray-400"
+          className="flex-1 bg-transparent border-none px-6 py-3 text-white outline-none placeholder:text-gray-400"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
           required
@@ -64,7 +69,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         <Button
           type="submit"
           disabled={loading}
-         className="h-12 px-7 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-semibold shadow-lg"
+          className="h-12 px-7 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 text-white font-semibold shadow-lg"
         >
           {loading ? (
             <Loader2 className="w-5 h-5 animate-spin" />

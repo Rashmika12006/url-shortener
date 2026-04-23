@@ -27,9 +27,10 @@ export default function URLTable({ urls, onDelete }: Props) {
 
   // ✅ COPY FIXED
   const copyToClipboard = (code: string) => {
-    navigator.clipboard.writeText(`${API}/r/${code}`);
-    toast.success("Link copied!");
-  };
+  const fullUrl = `${import.meta.env.VITE_API_URL}/r/${code}`;
+  navigator.clipboard.writeText(fullUrl);
+  toast.success("Link copied!");
+};
 
   return (
     <div className="space-y-4">
